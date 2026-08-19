@@ -4,7 +4,9 @@
     {
       "id": "ffmpeg",
       "name": "FFmpeg",
+      "version": "9.0.1",
       "homepage": "https://github.com/FFmpeg/FFmpeg",
+      "note": "Not bundled, expected on PATH. Version is what this app was last tested against — see engine/engine.go's checkToolVersions for the runtime drift check.",
       "install": {
         "macos": "brew install ffmpeg"
       }
@@ -12,7 +14,9 @@
     {
       "id": "gifski",
       "name": "gifski",
+      "version": "1.34.0",
       "homepage": "https://github.com/ImageOptim/gifski",
+      "note": "Not bundled, expected on PATH. Version is what this app was last tested against — see engine/engine.go's checkToolVersions for the runtime drift check.",
       "install": {
         "macos": "brew install gifski"
       }

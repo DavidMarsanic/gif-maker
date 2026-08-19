@@ -57,6 +57,13 @@ type Engine struct {
 	FFprobePath string
 	GifskiPath  string
 
+	// VersionNotes is populated by New — one entry per resolved tool whose
+	// version doesn't match what this engine was last tested against.
+	// Non-blocking: a newer or older tool very often still works fine —
+	// this just makes drift visible instead of silently invisible, since
+	// nothing here pins or auto-updates either tool.
+	VersionNotes []string
+
 	toolsErr error // set by New if a required tool wasn't found; checked lazily
 }
 
@@ -89,7 +96,65 @@ func New() *Engine {
 		return e
 	}
 	e.GifskiPath = gifski
+	e.VersionNotes = checkToolVersions(ffmpeg, gifski)
 	return e
+}
+
+// expectedFFmpegVersion and expectedGifskiVersion are what this engine was
+// actually last tested against — keep in sync with securexe.json's
+// matching dependency entries by hand; nothing enforces the two staying
+// equal, but a mismatch between them here is a real bug.
+const (
+	expectedFFmpegVersion = "9.0.1"
+	expectedGifskiVersion = "1.34.0"
+)
+
+// checkToolVersions runs a version command against each resolved tool and
+// returns one human-readable note per tool whose reported version doesn't
+// match expectedFFmpegVersion/expectedGifskiVersion. Deliberately
+// non-blocking — see the VersionNotes doc comment above.
+func checkToolVersions(ffmpegPath, gifskiPath string) []string {
+	var notes []string
+	if v, err := ffmpegVersion(ffmpegPath); err == nil && v != expectedFFmpegVersion {
+		notes = append(notes, fmt.Sprintf(
+			"ffmpeg is %s, this app was last tested against %s — should still work, but if something breaks, that's the first thing to check",
+			v, expectedFFmpegVersion))
+	}
+	if v, err := gifskiVersion(gifskiPath); err == nil && v != expectedGifskiVersion {
+		notes = append(notes, fmt.Sprintf(
+			"gifski is %s, this app was last tested against %s — should still work, but if something breaks, that's the first thing to check",
+			v, expectedGifskiVersion))
+	}
+	return notes
+}
+
+// ffmpeg's "-version" output starts with "ffmpeg version 9.0.1 Copyright...";
+// only the version token itself is worth comparing.
+func ffmpegVersion(path string) (string, error) {
+	out, err := exec.Command(path, "-version").Output()
+	if err != nil {
+		return "", err
+	}
+	fields := strings.Fields(string(out))
+	for i, f := range fields {
+		if f == "version" && i+1 < len(fields) {
+			return fields[i+1], nil
+		}
+	}
+	return "", fmt.Errorf("unrecognized ffmpeg -version output")
+}
+
+// gifski's "--version" output is just "gifski 1.34.0".
+func gifskiVersion(path string) (string, error) {
+	out, err := exec.Command(path, "--version").Output()
+	if err != nil {
+		return "", err
+	}
+	fields := strings.Fields(string(out))
+	if len(fields) < 2 {
+		return "", fmt.Errorf("unrecognized gifski --version output")
+	}
+	return fields[len(fields)-1], nil
 }
 
 // CheckTools reports the missing-dependency error recorded by New, if any.

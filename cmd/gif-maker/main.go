@@ -51,6 +51,9 @@ func run(args []string) int {
 	}
 
 	eng := engine.New()
+	for _, note := range eng.VersionNotes {
+		fmt.Fprintln(os.Stderr, "note:", note)
+	}
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
