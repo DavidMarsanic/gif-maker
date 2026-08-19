@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "dependencies": [
+    {
+      "id": "ffmpeg",
+      "name": "FFmpeg",
+      "homepage": "https://github.com/FFmpeg/FFmpeg",
+      "install": {
+        "macos": "brew install ffmpeg"
+      }
+    },
+    {
+      "id": "gifski",
+      "name": "gifski",
+      "homepage": "https://github.com/ImageOptim/gifski",
+      "install": {
+        "macos": "brew install gifski"
+      }
+    }
+  ],
+  "requirements": [
+    {
+      "id": "chromium-browser",
+      "name": "Chrome or Chromium-based browser",
+      "homepage": "https://www.google.com/chrome/",
+      "note": "Any Chromium-based browser works: Google Chrome, Chromium, Brave, Microsoft Edge, or Arc. Used to render the app's own UI window, same as video-clipper, instaframe, and pdf-toolkit.",
+      "install": {
+        "macos": "brew install --cask google-chrome"
+      }
+    }
+  ]
+}

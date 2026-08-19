@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GIF Maker</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<main class="app">
+
+  <div id="dropZone" class="drop-zone">
+    <p class="drop-title">Drop a video here</p>
+    <p class="drop-sub">or click to choose — pick a range, export a GIF</p>
+    <input id="fileInput" type="file" accept="video/*" hidden>
+  </div>
+
+  <div id="error" class="error hidden"></div>
+
+  <section id="workspace" class="workspace hidden">
+    <div class="preview-wrap">
+      <video id="preview" class="preview" playsinline muted></video>
+    </div>
+
+    <section class="timeline-section">
+      <div class="timeline" id="timeline">
+        <div class="track"></div>
+        <div class="range" id="range"></div>
+        <div class="playhead" id="playhead"></div>
+        <div class="handle" id="handleStart" data-handle="start" tabindex="0" role="slider" aria-label="Start"></div>
+        <div class="handle" id="handleEnd" data-handle="end" tabindex="0" role="slider" aria-label="End"></div>
+      </div>
+      <div class="timeline-labels">
+        <span id="labelZero">00:00</span>
+        <span id="labelDuration">00:00</span>
+      </div>
+
+      <div class="fields">
+        <label class="field">Start
+          <input id="startField" type="text" inputmode="decimal">
+        </label>
+        <label class="field">End
+          <input id="endField" type="text" inputmode="decimal">
+        </label>
+        <div class="duration">Duration: <span id="durationField">0.0</span> sec</div>
+      </div>
+
+      <div class="options-row">
+        <label class="field">Width
+          <select id="width">
+            <option value="0">Original</option>
+            <option value="480" selected>480px</option>
+            <option value="320">320px</option>
+            <option value="240">240px</option>
+          </select>
+        </label>
+        <p class="hint">Smaller width = much smaller GIF file.</p>
+      </div>
+
+      <button id="exportBtn" class="btn primary save-btn" type="button">Export GIF</button>
+
+      <div id="progress" class="progress hidden">
+        <div class="progress-bar"><div class="progress-fill indeterminate"></div></div>
+        <div id="progressLabel" class="progress-label"></div>
+        <button id="cancelJob" class="link-btn" type="button">Cancel</button>
+      </div>
+
+      <div id="doneActions" class="done-actions hidden">
+        <span id="doneMessage" class="done-message"></span>
+        <div class="done-buttons">
+          <button id="openFile" class="btn" type="button">Open file</button>
+          <button id="showFolder" class="btn" type="button">Show in folder</button>
+        </div>
+      </div>
+    </section>
+
+    <button id="startOver" class="link-btn" type="button">Start over</button>
+  </section>
+
+</main>
+<script src="/app.js"></script>
+</body>
+</html>
