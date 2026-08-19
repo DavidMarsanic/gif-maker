@@ -1,0 +1,17 @@
+# Tells Securexe to rebuild DavidMarsanic/gif-maker whenever you push.
+# Safe to commit — no secrets required, this just pings a public endpoint
+# that re-resolves your repo's latest commit and rebuilds if it changed.
+# If your default branch isn't main or master, add it to the list below.
+name: Notify Securexe
+on:
+  push:
+    branches: [main, master]
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger securexe rebuild
+        run: |
+          curl -fsS -X POST "https://worker.brightencode.com/clone" \
+            -H "Content-Type: application/json" \
+            -d "{\"repoUrl\":\"https://github.com/${{ github.repository }}\"}"
