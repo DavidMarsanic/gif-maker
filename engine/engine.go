@@ -176,7 +176,7 @@ func isExecutableFile(path string) bool {
 }
 
 // expectedFFmpegVersion and expectedGifskiVersion are what this engine was
-// actually last tested against — keep in sync with securexe.json's
+// actually last tested against — keep in sync with brightencode.json's
 // matching dependency entries by hand; nothing enforces the two staying
 // equal, but a mismatch between them here is a real bug.
 const (
